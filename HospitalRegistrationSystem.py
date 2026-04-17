@@ -30,7 +30,7 @@ class Patient:
     def is_child(self):
         return self.__age < 18
 
-class EmergencyPatient(Patient):
+class CriticalPatient(Patient):
     def __init__(self, patient_id, name, age):
         super().__init__(patient_id, name, age, is_critical = True)
     
@@ -39,35 +39,103 @@ class EmergencyPatient(Patient):
 
 
 class ChildPatient(Patient):
-    def __init__(self, patient_id, name, age, is_critical = False):
-        super().__init__(patient_id, name, age, is_critical)
+    def __init__(self, patient_id, name, age):
+        super().__init__(patient_id, name, age)
     
     def get_department(self):
         return "Pediatric care"
 
+
 class AdultPatient(Patient):
-    def __init__(self, patient_id, name, age, is_critical = False):
-        super().__init__(patient_id, name, age, is_critical)
+    def __init__(self, patient_id, name, age):
+        super().__init__(patient_id, name, age)
     
     def get_department(self):
         return "Continuing registration..."
 
 
+class UrgentPatient(AdultPatient):
+    def __init__(self, patient_id, name, age):
+        super().__init__(patient_id, name, age)
+    
+    def get_department(self):
+        return "Emergency Room"     
+
+class PlannedPatient(AdultPatient):
+    def __init__(self, patient_id, name, age):
+        super().__init__(patient_id, name, age)
+    
+    def get_department(self):
+        return "Continue registration..."     
+
+
+# Reikia paupdatint tris zemutines klases, nes atsirado PlannedPatient klase
+
+
+class TherapyPatient(PlannedPatient):
+    def __init__(self, patient_id, name, age, specialty):
+        super().__init__(patient_id, name, age)
+        self.__specialty = specialty
+
+    @property
+    def specialty(self):
+        return self.__specialty
+
+    def get_department(self):
+        return "Therapy Department"
+
+
+class SurgeryPatient(PlannedPatient):
+    def __init__(self, patient_id, name, age, specialty):
+        super().__init__(patient_id, name, age)
+        self.__specialty = specialty
+
+    @property
+    def specialty(self):
+        return self.__specialty
+
+    def get_department(self):
+        return "Surgery Department"
+
+
+class DiagnosticsPatient(PlannedPatient):
+    def __init__(self, patient_id, name, age, specialty):
+        super().__init__(patient_id, name, age)
+        self.__specialty = specialty
+
+    @property
+    def specialty(self):
+        return self.__specialty
+
+    def get_department(self):
+        return "Diagnostic Department"
+
+
+
+
+
+
 #Testavimas
 
-def create_patient(patient_id, name, age, is_critical = False):
+def create_patient(patient_id, name, age, is_critical = False, profile = None, specialty = None):
     patient = Patient(patient_id, name, age)
 
     if is_critical:
-        return EmergencyPatient(patient_id, name, age)
-    if patient.is_child():
+        return CriticalPatient(patient_id, name, age)
+    elif patient.is_child():
         return ChildPatient(patient_id, name, age)
+    elif profile == "Therapy":
+        return TherapyPatient(patient_id, name, age, specialty)
+    elif profile == "Surgery":
+        return SurgeryPatient(patient_id, name, age, specialty)    
+    elif profile == "Diagnostics":
+        return DiagnosticsPatient(patient_id, name, age, specialty)    
     else:
-        return AdultPatient(patient_id, name, age)
+        raise ValueError("Invalid profile. Choose: Therapy, Surgery or Diagnostics")
     
 p1 = create_patient(1, "John", 10, False)
 p2 = create_patient(2, "Peter", 30, True)
-p3 = create_patient(3, "Anna", 25, False)
+p3 = create_patient(3, "Anna", 25, False, "Therapy")
 
 print(p1.get_department())
 print(p2.get_department())
