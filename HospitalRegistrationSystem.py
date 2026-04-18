@@ -1,9 +1,12 @@
 class Patient:
-    def __init__(self, patient_id, name, age, is_critical = False):
+    def __init__(self, patient_id, name, age, is_critical = False, visit_type= None, profile = None, specialty = None):
         self.__patient_id = patient_id
         self.__name = name
         self.__age = age
         self.__is_critical = is_critical
+        self.__visit_type = visit_type
+        self.__profile = profile
+        self.__specialty = specialty
 
     @property
     def patient_id(self):
@@ -47,8 +50,8 @@ class ChildPatient(Patient):
 
 
 class AdultPatient(Patient):
-    def __init__(self, patient_id, name, age):
-        super().__init__(patient_id, name, age)
+    def __init__(self, patient_id, name, age, visit_type = None, profile = None, specialty = None):
+        super().__init__(patient_id, name, age, visit_type = visit_type, profile = profile, specialty = specialty)
     
     def get_department(self):
         return "Continuing registration..."
@@ -56,25 +59,22 @@ class AdultPatient(Patient):
 
 class UrgentPatient(AdultPatient):
     def __init__(self, patient_id, name, age):
-        super().__init__(patient_id, name, age)
+        super().__init__(patient_id, name, age, visit_type = "Urgent")
     
     def get_department(self):
         return "Emergency Room"     
 
 class PlannedPatient(AdultPatient):
-    def __init__(self, patient_id, name, age):
-        super().__init__(patient_id, name, age)
+    def __init__(self, patient_id, name, age, profile = None, specialty = None):      
+        super().__init__(patient_id, name, age, visit_type = "Planned", profile = profile, specialty = specialty)
     
     def get_department(self):
         return "Continue registration..."     
 
 
-# Reikia paupdatint tris zemutines klases, nes atsirado PlannedPatient klase
-
-
 class TherapyPatient(PlannedPatient):
     def __init__(self, patient_id, name, age, specialty):
-        super().__init__(patient_id, name, age)
+        super().__init__(patient_id, name, age, profile = "Therapy", specialty = specialty)
         self.__specialty = specialty
 
     @property
@@ -82,12 +82,12 @@ class TherapyPatient(PlannedPatient):
         return self.__specialty
 
     def get_department(self):
-        return "Therapy Department"
+        return f"Therapy Department - {self.__specialty}"
 
 
 class SurgeryPatient(PlannedPatient):
     def __init__(self, patient_id, name, age, specialty):
-        super().__init__(patient_id, name, age)
+        super().__init__(patient_id, name, age, profile = "Surgery", specialty = specialty)
         self.__specialty = specialty
 
     @property
@@ -95,12 +95,12 @@ class SurgeryPatient(PlannedPatient):
         return self.__specialty
 
     def get_department(self):
-        return "Surgery Department"
+        return f"Surgery Department - {self.__specialty}"
 
 
 class DiagnosticsPatient(PlannedPatient):
     def __init__(self, patient_id, name, age, specialty):
-        super().__init__(patient_id, name, age)
+        super().__init__(patient_id, name, age, profile = "Diagnostics", specialty = specialty)
         self.__specialty = specialty
 
     @property
@@ -108,7 +108,7 @@ class DiagnosticsPatient(PlannedPatient):
         return self.__specialty
 
     def get_department(self):
-        return "Diagnostic Department"
+        return f"Diagnostic Department - {self.__specialty}"
 
 
 
@@ -117,13 +117,15 @@ class DiagnosticsPatient(PlannedPatient):
 
 #Testavimas
 
-def create_patient(patient_id, name, age, is_critical = False, profile = None, specialty = None):
+def create_patient(patient_id, name, age, is_critical = False, visit_type= None, profile = None, specialty = None):
     patient = Patient(patient_id, name, age)
 
     if is_critical:
         return CriticalPatient(patient_id, name, age)
     elif patient.is_child():
         return ChildPatient(patient_id, name, age)
+    elif visit_type == "Urgent":
+        return UrgentPatient(patient_id, name, age)
     elif profile == "Therapy":
         return TherapyPatient(patient_id, name, age, specialty)
     elif profile == "Surgery":
@@ -135,7 +137,7 @@ def create_patient(patient_id, name, age, is_critical = False, profile = None, s
     
 p1 = create_patient(1, "John", 10, False)
 p2 = create_patient(2, "Peter", 30, True)
-p3 = create_patient(3, "Anna", 25, False, "Therapy")
+p3 = create_patient(3, "Anna", 25, False, profile="Therapy", specialty="Cardiology")
 
 print(p1.get_department())
 print(p2.get_department())
