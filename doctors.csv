@@ -1,0 +1,31 @@
+doctor_id,name,specialty
+1,John,Neurology
+2,Emily,Neurology
+3,Michael,Neurology
+4,Sarah,Pulmonology
+5,David,Pulmonology
+6,Laura,Pulmonology
+7,Arthur,Cardiology
+8,Lisa,Cardiology
+9,Robert,Cardiology
+10,Emma,Hematology
+11,William,Hematology
+12,Olivia,Hematology
+13,Daniel,Endocrinology
+14,Sophia,Endocrinology
+15,Matthew,Endocrinology
+16,Isabella,Gastroenterology
+17,Alexander,Gastroenterology
+18,Mia,Gastroenterology
+19,Ethan,Abdominal Surgery
+20,Charlotte,Abdominal Surgery
+21,Benjamin,Abdominal Surgery
+22,Amelia,Thoracic Surgery
+23,Lucas,Thoracic Surgery
+24,Harper,Thoracic Surgery
+25,Mason,Ophthalmology
+26,Evelyn,Ophthalmology
+27,Logan,Ophthalmology
+28,Abigail,ENT
+29,Elijah,ENT
+30,Sofia,ENT

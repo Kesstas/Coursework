@@ -1,3 +1,5 @@
+import csv
+
 class Patient:
     def __init__(self, patient_id, name, age, is_critical = False, visit_type= None, profile = None, specialty = None):
         self.__patient_id = patient_id
@@ -152,6 +154,21 @@ class Doctor():
         return self.__specialty
 
 
+def load_doctors(filename):
+    doctors = {}
+    with open(filename) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            doctor = Doctor(row["doctor_id"], row["name"], row["specialty"])
+            if row["specialty"] not in doctors:
+                doctors[row["specialty"]] = []
+            doctors[row["specialty"]].append(doctor)
+    return doctors
+
+
+doctors = load_doctors("doctors.csv")
+    
+
 #Testavimas
 
 def create_patient(patient_id, name, age, is_critical = False, visit_type= None, profile = None, specialty = None, doctor = None):
@@ -175,7 +192,7 @@ def create_patient(patient_id, name, age, is_critical = False, visit_type= None,
 p1 = create_patient(1, "John", 10, False)
 p2 = create_patient(2, "Peter", 30, True)
 
-d1 = Doctor(1, "Arthur", "Cardiology")
+d1 = doctors["Cardiology"][0]
 p3 = create_patient(3, "Anna", 25, False, profile="Therapy", specialty="Cardiology", doctor=d1)
 
 print(p1.get_department())
