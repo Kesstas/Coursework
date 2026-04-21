@@ -132,7 +132,7 @@ class DiagnosticsPatient(PlannedPatient):
         return self.__specialty
 
     def get_department(self):
-        return f"Diagnostic Department - {self.__specialty}"
+        return f"Diagnostics Department - {self.__specialty}"
 
 
 class Doctor():
@@ -167,7 +167,15 @@ def load_doctors(filename):
 
 
 doctors = load_doctors("doctors.csv")
-    
+
+
+
+
+
+
+
+
+
 
 #Testavimas
 
@@ -188,13 +196,64 @@ def create_patient(patient_id, name, age, is_critical = False, visit_type= None,
         return DiagnosticsPatient(patient_id, name, age, specialty)    
     else:
         raise ValueError("Invalid profile. Choose: Therapy, Surgery or Diagnostics")
+
+class PatientRegistry:
+    def __init__(self):
+        self.__counter = 0
+
+    def register_patient(self):
+        self.__counter += 1
+        patient_id = self.__counter
+       
+        name = input("Patient name: ")
+        
+        age = int(input("Patient age: "))
+        is_critical = input("Is the patient in a critical state? (yes/no): ")
+        if is_critical == "yes":
+            return create_patient(patient_id, name, age, is_critical = True)
+        if age < 18:
+            return create_patient(patient_id, name, age)
+        
+        visit_type = input("Is the patient Urgent/Planned: ")
+        if visit_type == "Urgent":
+            return create_patient(patient_id, name, age, visit_type="Urgent")
+        
+        profile = input("Choose profile (Therapy/Surgery/Diagnostics): ")
+        
+        if profile == "Therapy":
+            specialty = input("Choose the requested specialty from the Therapy Department (Neurology/Pulmonology/Cardiology/Hematology/Endokrinology/Gastroenterology): ")
+            available_doctors = doctors[specialty]
+            for i, doc in enumerate(available_doctors):
+                print(f"{i+1}. {doc.name}")
+            doctor_choice = int(input("Choose a doctor (1/2/3): ")) - 1
+            doctor = available_doctors[doctor_choice]
+            return create_patient(patient_id, name, age, visit_type=visit_type, profile=profile, specialty=specialty, doctor=doctor)
+        
+        if profile == "Surgery":
+            specialty = input("Choose the requested specialty from the Sugery Department (Stomach/Chest/Eye/ENT): ")
+            available_doctors = doctors[specialty]
+            for i, doc in enumerate(available_doctors):
+                print(f"{i+1}. {doc.name}")
+            doctor_choice = int(input("Choose a doctor (1/2/3): ")) - 1
+            doctor = available_doctors[doctor_choice]
+            return create_patient(patient_id, name, age, visit_type=visit_type, profile=profile, specialty=specialty, doctor=doctor)
+            
+        if profile == "Diagnostics":
+            specialty = input("Choose the requested specialty from the Diagnostics Department (KT/MRT/X-Ray/Lab): ")
+            return create_patient(patient_id, name, age, visit_type=visit_type, profile=profile, specialty=specialty)
     
-p1 = create_patient(1, "John", 10, False)
-p2 = create_patient(2, "Peter", 30, True)
 
-d1 = doctors["Cardiology"][0]
-p3 = create_patient(3, "Anna", 25, False, profile="Therapy", specialty="Cardiology", doctor=d1)
 
-print(p1.get_department())
-print(p2.get_department())
-print(p3.get_department())
+registry = PatientRegistry()
+patient = registry.register_patient()
+print(patient.get_department())
+
+# p1 = create_patient(1, "John", 10, False)
+# p2 = create_patient(2, "Peter", 30, True)
+
+# d1 = doctors["Cardiology"][0]
+# p3 = create_patient(3, "Anna", 25, False, profile="Therapy", specialty="Cardiology", doctor=d1)
+
+# print(p1.get_department())
+# print(p2.get_department())
+# print(p3.get_department())
