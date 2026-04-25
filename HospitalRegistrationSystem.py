@@ -169,16 +169,7 @@ def load_doctors(filename):
 doctors = load_doctors("doctors.csv")
 
 
-
-
-
-
-
-
-
-
 #Testavimas
-
 def create_patient(patient_id, name, age, is_critical = False, visit_type= None, profile = None, specialty = None, doctor = None):
     patient = Patient(patient_id, name, age)
 
@@ -205,64 +196,111 @@ class PatientRegistry:
         self.__counter += 1
         patient_id = self.__counter
        
-        name = input("Patient name: ")
+        while True:
+            name = input("Patient name: ")
+            if name.strip():
+                break
+            print("Name cannot be empty. Try again.")
         
-        age = int(input("Patient age: "))
-        is_critical = input("Is the patient in a critical state? (yes/no): ")
-        if is_critical == "yes":
+        while True:
+            try:
+                age = int(input("Patient age: "))
+                if age >= 0:
+                    break
+                print("Age cannot be negative. Try again.")
+            except ValueError:
+                print("Invalid number. Try again.")
+
+        while True:    
+            is_critical = input("Is the patient in a critical state? (Yes/No): ")
+            if is_critical in ("Yes", "No"):
+                break
+            print("Invalid input. Please enter Yes or No.")
+        
+        if is_critical == "Yes":
             return create_patient(patient_id, name, age, is_critical = True)
         if age < 18:
             return create_patient(patient_id, name, age)
         
-        visit_type = input("Is the patient Urgent/Planned: ")
+        while True:
+            visit_type = input("Is the patient Urgent/Planned: ")
+            if visit_type in ("Urgent", "Planned"):
+                break
+            print("Invalid input. Please enter Urgent or Planned.")
+
         if visit_type == "Urgent":
             return create_patient(patient_id, name, age, visit_type="Urgent")
         
-        profile = input("Choose profile (Therapy/Surgery/Diagnostics): ")
+        while True:
+            profile = input("Choose profile (Therapy/Surgery/Diagnostics): ")
+            if profile in ("Therapy", "Surgery", "Diagnostics"):
+                break
+            print("Invalid input. Please enter Therapy/Surgery/Diagnostics.") 
         
         if profile == "Therapy":
-            specialty = input("Choose the requested specialty from the Therapy Department (Neurology/Pulmonology/Cardiology/Hematology/Endokrinology/Gastroenterology): ")
+            
+            while True:
+                specialty = input("Choose the requested specialty from the Therapy Department (Neurology/Pulmonology/Cardiology/Hematology/Endocrinology/Gastroenterology): ")
+                if specialty in ("Neurology", "Pulmonology", "Cardiology", "Hematology", "Endocrinology", "Gastroenterology"):
+                    break
+                print("Invalid input. Please enter Neurology/Pulmonology/Cardiology/Hematology/Endocrinology/Gastroenterology.")
+            
             available_doctors = doctors[specialty]
             for i, doc in enumerate(available_doctors):
                 print(f"{i+1}. {doc.name}")
-            doctor_choice = int(input("Choose a doctor (1/2/3): ")) - 1
+
+            while True:
+                try:
+                    doctor_choice = int(input("Choose a doctor. Enter the number provided: ")) - 1
+                    if 0 <= doctor_choice < len(available_doctors):
+                        break
+                    print(f"Invalid input. Please enter a number between 1 and {len(available_doctors)}")
+
+                except ValueError:
+                    print("Invalid number. Try again.")
+            
             doctor = available_doctors[doctor_choice]
             return create_patient(patient_id, name, age, visit_type=visit_type, profile=profile, specialty=specialty, doctor=doctor)
         
         if profile == "Surgery":
-            specialty = input("Choose the requested specialty from the Sugery Department (Stomach/Chest/Eye/ENT): ")
+            
+            while True:
+                specialty = input("Choose the requested specialty from the Sugery Department (Abdominal Surgery/Thoracic Surgery/Ophthalmology/ENT): ")
+                if specialty in ("Abdominal Surgery", "Thoracic Surgery", "Ophthalmology", "ENT"):
+                    break
+                print("Invalid input. Please enter Abdominal Surgery/Thoracic Surgery/Ophthalmology/ENT")
+
             available_doctors = doctors[specialty]
             for i, doc in enumerate(available_doctors):
                 print(f"{i+1}. {doc.name}")
-            doctor_choice = int(input("Choose a doctor (1/2/3): ")) - 1
+            
+            while True:
+                try:
+                    doctor_choice = int(input("Choose a doctor. Enter the number provided: ")) - 1
+                    if 0 <= doctor_choice < len(available_doctors):
+                        break
+                    print(f"Invalid input. Please enter a number between 1 and {len(available_doctors)}")
+
+                except ValueError:
+                    print("Invalid number. Try again.")
+
             doctor = available_doctors[doctor_choice]
             return create_patient(patient_id, name, age, visit_type=visit_type, profile=profile, specialty=specialty, doctor=doctor)
             
         if profile == "Diagnostics":
-            specialty = input("Choose the requested specialty from the Diagnostics Department (KT/MRT/X-Ray/Lab): ")
+
+            while True:
+                specialty = input("Choose the requested specialty from the Diagnostics Department (KT/MRT/X-Ray/Lab): ")
+                if specialty in ("KT", "MRT", "X-Ray", "Lab"):
+                    break
+                print("Invalid input. Please enter KT/MRT/X-Ray/Lab")
+
             return create_patient(patient_id, name, age, visit_type=visit_type, profile=profile, specialty=specialty)
     
-
 
 registry = PatientRegistry()
 patient = registry.register_patient()
 print(patient.get_department())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # p1 = create_patient(1, "John", 10, False)
 # p2 = create_patient(2, "Peter", 30, True)
