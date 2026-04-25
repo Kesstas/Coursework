@@ -248,6 +248,22 @@ registry = PatientRegistry()
 patient = registry.register_patient()
 print(patient.get_department())
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # p1 = create_patient(1, "John", 10, False)
 # p2 = create_patient(2, "Peter", 30, True)
 
