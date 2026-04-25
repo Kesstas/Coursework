@@ -188,9 +188,18 @@ def create_patient(patient_id, name, age, is_critical = False, visit_type= None,
     else:
         raise ValueError("Invalid profile. Choose: Therapy, Surgery or Diagnostics")
 
+
+def get_entry_count():
+    try:
+        with open("patient_reports.txt", "r") as f:
+            return f.read().count("==========Entry:")
+    except FileNotFoundError:
+        return 0
+
+
 class PatientRegistry:
     def __init__(self):
-        self.__counter = 0
+        self.__counter = get_entry_count()
 
     def register_patient(self):
         self.__counter += 1
@@ -290,17 +299,38 @@ class PatientRegistry:
         if profile == "Diagnostics":
 
             while True:
-                specialty = input("Choose the requested specialty from the Diagnostics Department (KT/MRT/X-Ray/Lab): ")
-                if specialty in ("KT", "MRT", "X-Ray", "Lab"):
+                specialty = input("Choose the requested specialty from the Diagnostics Department (CT/MRI/X-Ray/Lab): ")
+                if specialty in ("CT", "MRI", "X-Ray", "Lab"):
                     break
-                print("Invalid input. Please enter KT/MRT/X-Ray/Lab")
+                print("Invalid input. Please enter CT/MRI/X-Ray/Lab")
 
             return create_patient(patient_id, name, age, visit_type=visit_type, profile=profile, specialty=specialty)
+
     
+def save_report(patient, entry_count):
+    doctor_name = patient.doctor.name if hasattr(patient, 'doctor') else 'N/A'
+    with open("patient_reports.txt", "a") as f:
+        f.write(f"""==========Entry:{entry_count}==========
+
+        Patient ID: {patient.patient_id}
+        Name: {patient.name}
+        Age: {patient.age}
+        Critical: {'Yes' if patient.is_critical else 'No'}
+        Visit Type: {patient.visit_type or 'N/A'}
+        Profile: {patient.profile or 'N/A'}
+        Specialty/Test type: {patient.specialty or 'N/A'}
+        Assigned Doctor: {doctor_name}
+
+===========================\n\n""")
+
 
 registry = PatientRegistry()
 patient = registry.register_patient()
-print(patient.get_department())
+entry_count = get_entry_count() + 1
+save_report(patient, entry_count)
+
+
+# print(patient.get_department())
 
 # p1 = create_patient(1, "John", 10, False)
 # p2 = create_patient(2, "Peter", 30, True)
