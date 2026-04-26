@@ -323,21 +323,8 @@ def save_report(patient, entry_count):
 
 ===========================\n\n""")
 
-
-registry = PatientRegistry()
-patient = registry.register_patient()
-entry_count = get_entry_count() + 1
-save_report(patient, entry_count)
-
-
-# print(patient.get_department())
-
-# p1 = create_patient(1, "John", 10, False)
-# p2 = create_patient(2, "Peter", 30, True)
-
-# d1 = doctors["Cardiology"][0]
-# p3 = create_patient(3, "Anna", 25, False, profile="Therapy", specialty="Cardiology", doctor=d1)
-
-# print(p1.get_department())
-# print(p2.get_department())
-# print(p3.get_department())
+if __name__ == '__main__':
+    registry = PatientRegistry()
+    patient = registry.register_patient()
+    entry_count = get_entry_count() + 1
+    save_report(patient, entry_count)
