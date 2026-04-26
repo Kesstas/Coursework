@@ -46,6 +46,9 @@ class Patient:
 
     def is_child(self):
         return self.__age < 18
+    
+    def get_department (self):
+        raise NotImplementedError("Every patient type must implement get_department()")
 
 class CriticalPatient(Patient):
     def __init__(self, patient_id, name, age):
